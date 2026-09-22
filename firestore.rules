@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// Lads Trip · Firestore rules
+// Anyone with the link can read the board and add/update their own vote.
+// Nobody can delete, and every vote has to look like a real vote.
+// Paste this whole file into Firebase console > Firestore Database > Rules > Publish.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /responses/{id} {
+      allow read: if true;
+      allow create, update: if isVote(request.resource.data) && request.resource.data.id == id;
+      allow delete: if false;
+    }
+
+    function isVote(d) {
+      return d.keys().hasOnly(['id','name','destinations','maxDays','months','blackout','budget','vibes','notes','year','updatedAt'])
+        && d.id is string && d.id.size() >= 1 && d.id.size() <= 60
+        && d.name is string && d.name.size() >= 1 && d.name.size() <= 40
+        && d.destinations is list && d.destinations.size() >= 1 && d.destinations.size() <= 3
+        && d.maxDays is number && d.maxDays >= 1 && d.maxDays <= 60
+        && d.months is list && d.months.size() >= 1 && d.months.size() <= 12
+        && d.blackout is string && d.blackout.size() <= 500
+        && d.budget is string && d.budget.size() <= 40
+        && d.vibes is list && d.vibes.size() <= 12
+        && d.notes is string && d.notes.size() <= 500
+        && d.year is number
+        && d.updatedAt == request.time;
+    }
+
+    // everything else is locked
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
