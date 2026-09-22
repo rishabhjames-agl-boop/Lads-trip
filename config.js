@@ -22,7 +22,7 @@ window.LADS_CONFIG = {
 
   // ---- The basics ----
   tripName: "Lads Trip '27",
-  year: 2027,
+  year: 2027, 2028
   currency: "USD",
 
   // Everyone in the chat. Shows up as tap to pick name chips, and drives the "still waiting on" list.
