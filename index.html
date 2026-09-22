@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lads Trip '27</title>
-<meta name="description" content="Where are we going lads? Vote for the destination, how many days you can get off and when next year works.">
+<title>Lads Trip '27/'28</title>
+<meta name="description" content="Where are we going lads? Vote for the destination, how many days you can get off and which months in 2027 or 2028 work.">
 <meta name="theme-color" content="#0b0b0c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -281,8 +281,11 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15);cursor:grab
 .ticks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);margin-top:6px}
 
 /* months */
-.months{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-@media (min-width:520px){.months{grid-template-columns:repeat(6,1fr)}}
+.months{display:flex;flex-direction:column;gap:18px}
+.months__year{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (min-width:520px){.months__year{grid-template-columns:repeat(6,1fr)}}
+.months__label{grid-column:1 / -1;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);display:flex;align-items:center;gap:12px;margin:0 0 2px}
+.months__label::after{content:"";flex:1;height:1px;background:var(--line)}
 .month{
   border:1px solid var(--line-2);background:transparent;border-radius:12px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;
   transition:background .3s,border-color .3s,color .3s,transform .5s var(--ease)
@@ -362,9 +365,12 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15);cursor:grab
 .who__label:first-child{margin-top:0}
 
 /* month heat */
-.heat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-@media (min-width:520px){.heat{grid-template-columns:repeat(6,1fr)}}
-@media (min-width:900px){.heat{grid-template-columns:repeat(12,1fr)}}
+.heat{display:flex;flex-direction:column;gap:18px}
+.heat__year{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (min-width:520px){.heat__year{grid-template-columns:repeat(6,1fr)}}
+@media (min-width:900px){.heat__year{grid-template-columns:repeat(12,1fr)}}
+.heat__label{grid-column:1 / -1;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);display:flex;align-items:center;gap:12px;margin:0 0 2px}
+.heat__label::after{content:"";flex:1;height:1px;background:var(--line)}
 .cell{
   border-radius:12px;padding:14px 6px 12px;text-align:center;border:1px solid var(--line);position:relative;
   background:rgba(233,168,76,calc(var(--t,0) * .85 + .03));color:var(--fg);transition:background .8s var(--ease),transform .5s var(--ease);min-width:0
@@ -424,7 +430,7 @@ td:nth-child(2){white-space:nowrap}
 
 <nav class="nav" id="nav">
   <div class="container nav__in">
-    <a class="nav__brand" href="#top"><i></i><span id="brandName">Lads Trip '27</span></a>
+    <a class="nav__brand" href="#top"><i></i><span id="brandName">Lads Trip '27/'28</span></a>
     <div class="nav__links">
       <a href="#destinations">The shouts</a>
       <a href="#vote">Vote</a>
@@ -438,9 +444,9 @@ td:nth-child(2){white-space:nowrap}
   <div class="hero__media" id="heroMedia"><img id="heroImg" alt="" fetchpriority="high"></div>
   <div class="hero__veil"></div>
   <div class="container hero__content">
-    <p class="eyebrow">Lads chat <b>·</b> <span id="eyebrowYear">2027</span> trip <b>·</b> sort it here not in the chat</p>
+    <p class="eyebrow">Lads chat <b>·</b> <span id="eyebrowYear">2027 or 2028</span> <b>·</b> sort it here not in the chat</p>
     <h1 class="hero__title" id="heroTitle">Right, where are we <em>actually</em> going?</h1>
-    <p class="hero__lede">Everyone's been shouting countries for a week. Put it here instead. Where you wanna go, how many days you can actually get off, and which months next year work. Two mins, done, and you can change it later.</p>
+    <p class="hero__lede">Everyone's been shouting countries for a week. Put it here instead. Where you wanna go, how many days you can actually get off, and which months in 2027 or 2028 work. Two mins, done, and you can change it later.</p>
     <div class="hero__cta">
       <a class="btn btn--primary" href="#vote">Put my vote in <span class="arr">→</span></a>
       <a class="btn" href="#results">See who said what</a>
@@ -515,10 +521,10 @@ td:nth-child(2){white-space:nowrap}
       </fieldset>
 
       <fieldset class="f f--l">
-        <legend><span class="f__num">D</span> Which months next year? <span class="f__req">at least one</span></legend>
-        <p class="f__hint">Tap every month you could realistically do.</p>
+        <legend><span class="f__num">D</span> Which months work? <span class="f__req">at least one</span></legend>
+        <p class="f__hint">Tap every month you could realistically do. 2027 or 2028, both fine.</p>
         <div class="months" id="months"></div>
-        <div class="row mt"><button type="button" class="link" id="monthsAll">I'm easy, tick them all</button><button type="button" class="link" id="monthsNone">clear</button></div>
+        <div class="row mt" id="monthLinks"></div>
       </fieldset>
 
       <fieldset class="f f--r">
@@ -637,7 +643,7 @@ td:nth-child(2){white-space:nowrap}
    Everything you'd want to change lives in config.js
    ============================================================ */
 const CFG = Object.assign({
-  tripName:"Lads Trip", year:2027, currency:"USD", lads:[], destinations:[],
+  tripName:"Lads Trip", years:[2027, 2028], currency:"USD", lads:[], destinations:[],
   budgets:[], vibes:[], minDays:3, maxDays:21, defaultDays:7, collection:"responses", firebaseVersion:"12.19.0"
 }, window.LADS_CONFIG || {});
 
@@ -648,6 +654,18 @@ const tidy = s => String(s).trim().replace(/\s+/g," ");
 const esc  = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_LONG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const YEARS = (Array.isArray(CFG.years) && CFG.years.length ? CFG.years : [CFG.year || 2027]).map(Number);
+const pad2 = n => String(n).padStart(2,"0");
+const mkey = (y, m) => `${y}-${pad2(m)}`;                       // months are stored as "2027-06"
+const mparse = k => { const s = String(k); const mm = s.match(/^(\d{4})-(\d{2})$/); return mm ? { y:+mm[1], m:+mm[2] } : null; };
+const normMonth = k => typeof k === "number" && k >= 1 && k <= 12 ? mkey(YEARS[0], k) : (mparse(k) ? String(k) : null);   // old votes stored 1..12
+const ALL_MONTHS = YEARS.flatMap(y => MONTHS.map((label, i) => ({ key:mkey(y, i+1), y, m:i+1, label, short:`${label} '${String(y).slice(2)}`, long:`${MONTHS_LONG[i]} ${y}` })));
+const monthInfo = k => ALL_MONTHS.find(x => x.key === k);
+const shortList = keys => {  // "Jun / Jul '27" or "Dec '27 / Jan '28"
+  const xs = keys.map(monthInfo).filter(Boolean);
+  if (!xs.length) return "";
+  return xs.every(x => x.y === xs[0].y) ? xs.map(x => x.label).join(" / ") + ` '${String(xs[0].y).slice(2)}` : xs.map(x => x.short).join(" / ");
+};
 const POINTS = [3,2,1];
 const DEST_NAMES = CFG.destinations.map(d => d.name);
 const initials = n => tidy(n).split(" ").slice(0,2).map(w => w[0] || "").join("").toUpperCase();
@@ -659,7 +677,7 @@ const toDate = v => v && typeof v.toDate === "function" ? v.toDate() : (typeof v
    Store: Firebase if configured, otherwise this browser only
    ------------------------------------------------------------ */
 function demoStore(reason){
-  const KEY = "ladstrip.demo." + (CFG.year || "x");
+  const KEY = "ladstrip.demo." + YEARS.join("-");
   const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } };
   const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch {} };
   const subs = new Set();
@@ -707,7 +725,7 @@ async function createStore(){
    ------------------------------------------------------------ */
 document.title = CFG.tripName;
 $("#brandName").textContent = CFG.tripName;
-$("#eyebrowYear").textContent = CFG.year;
+$("#eyebrowYear").textContent = YEARS.length > 1 ? YEARS.slice(0,-1).join(", ") + " or " + YEARS[YEARS.length-1] : YEARS[0];
 
 // hero title word stagger
 (() => {
@@ -812,7 +830,7 @@ function applyResponse(r){
   state.picks = (r.destinations || []).slice(0,3);
   state.picks.forEach(p => { if (!DEST_NAMES.includes(p)) state.wildcards.add(p); });
   state.maxDays = Math.min(CFG.maxDays, Math.max(CFG.minDays, +r.maxDays || CFG.defaultDays));
-  state.months = new Set((r.months || []).filter(m => m >= 1 && m <= 12));
+  state.months = new Set((r.months || []).map(normMonth).filter(k => k && monthInfo(k)));
   state.budget = r.budget || "";
   state.vibes = new Set(r.vibes || []);
   $("#blackout").value = r.blackout || "";
@@ -883,14 +901,23 @@ function renderDays(){
 }
 
 // months
-monthsEl.innerHTML = MONTHS.map((m, i) => `<button type="button" class="month" data-m="${i+1}" aria-pressed="false"><b>${m}</b><small>${CFG.year}</small></button>`).join("");
+monthsEl.innerHTML = YEARS.map(y => `<div class="months__year"><p class="months__label">${y}</p>${
+  MONTHS.map((m, i) => `<button type="button" class="month" data-m="${mkey(y, i+1)}" aria-pressed="false"><b>${m}</b><small>${y}</small></button>`).join("")
+}</div>`).join("");
 monthsEl.addEventListener("click", e => {
   const b = e.target.closest("[data-m]"); if (!b) return;
-  const m = +b.dataset.m; state.months.has(m) ? state.months.delete(m) : state.months.add(m); renderMonths();
+  const k = b.dataset.m; state.months.has(k) ? state.months.delete(k) : state.months.add(k); renderMonths();
 });
-$("#monthsAll").addEventListener("click", () => { state.months = new Set([1,2,3,4,5,6,7,8,9,10,11,12]); renderMonths(); });
-$("#monthsNone").addEventListener("click", () => { state.months.clear(); renderMonths(); });
-function renderMonths(){ $$("[data-m]", monthsEl).forEach(b => b.setAttribute("aria-pressed", String(state.months.has(+b.dataset.m)))); }
+$("#monthLinks").innerHTML = YEARS.map(y => `<button type="button" class="link" data-all="${y}">tick all of ${y}</button>`).join("") +
+  `<button type="button" class="link" data-all="*">I'm easy, tick the lot</button><button type="button" class="link" data-all="">clear</button>`;
+$("#monthLinks").addEventListener("click", e => {
+  const b = e.target.closest("[data-all]"); if (!b) return;
+  const v = b.dataset.all;
+  if (v === "") state.months.clear();
+  else ALL_MONTHS.filter(x => v === "*" || String(x.y) === v).forEach(x => state.months.add(x.key));
+  renderMonths();
+});
+function renderMonths(){ $$("[data-m]", monthsEl).forEach(b => b.setAttribute("aria-pressed", String(state.months.has(b.dataset.m)))); }
 
 // budget
 $("#budgetHint").textContent = `Rough is fine. In ${CFG.currency}.`;
@@ -926,12 +953,12 @@ $("#voteForm").addEventListener("submit", async e => {
     name: state.name,
     destinations: state.picks.slice(0,3),
     maxDays: state.maxDays,
-    months: [...state.months].sort((a,b) => a-b),
+    months: [...state.months].sort(),
     blackout: tidy($("#blackout").value).slice(0,500),
     budget: state.budget,
     vibes: [...state.vibes],
     notes: tidy($("#notes").value).slice(0,500),
-    year: CFG.year
+    year: YEARS[0]
   };
   const btn = $("#submitBtn"); btn.disabled = true; btn.firstChild.textContent = "Saving ";
   try {
@@ -966,13 +993,13 @@ function compute(list){
   }));
   const leaderboard = [...byDest.values()].sort((a,b) => b.pts - a.pts || b.firsts - a.firsts || a.name.localeCompare(b.name));
 
-  const months = MONTHS.map((m, i) => ({ m:i+1, label:m, count:0, names:[] }));
-  list.forEach(r => (r.months || []).forEach(m => { if (m >= 1 && m <= 12) { months[m-1].count++; months[m-1].names.push(r.name); } }));
+  const months = ALL_MONTHS.map(x => ({ ...x, count:0, names:[] }));
+  list.forEach(r => (r.months || []).forEach(k => { const mo = months.find(x => x.key === normMonth(k)); if (mo) { mo.count++; mo.names.push(r.name); } }));
   const maxMonth = Math.max(0, ...months.map(x => x.count));
   const topMonths = months.filter(x => x.count === maxMonth && maxMonth > 0);
   // best two month window (for a trip that straddles months)
   let window2 = null;
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < months.length - 1; i++) {
     const both = months[i].names.filter(n => months[i+1].names.includes(n)).length;
     if (!window2 || both > window2.both) window2 = { a:months[i], b:months[i+1], both };
   }
@@ -1010,7 +1037,7 @@ function renderResults(list){
   $("#ticker").innerHTML = R.n
     ? `<span><b>${R.n}</b> of ${total} voted</span>` +
       (R.leaderboard[0] ? `<span><b>${esc(R.leaderboard[0].name)}</b> in front</span>` : "") +
-      (R.topMonths.length ? `<span><b>${esc(listify(R.topMonths.slice(0,2).map(m => m.label)))}</b> most free</span>` : "") +
+      (R.topMonths.length ? `<span><b>${esc(shortList(R.topMonths.slice(0,2).map(m => m.key)))}</b> most free</span>` : "") +
       (R.minDays ? `<span>everyone can do <b>${R.minDays} days</b></span>` : "")
     : `<span>Nobody's voted yet. <b>Be first.</b></span>`;
 
@@ -1020,7 +1047,7 @@ function renderResults(list){
   $("#tiles").innerHTML = `
     <div class="tile"><p class="tile__k">Voted</p><p class="tile__v">${R.n}<small> / ${total}</small></p><p class="tile__s">${R.missing.length ? `${R.missing.length} still to go` : "Everyone's in"}</p></div>
     <div class="tile tile--accent"><p class="tile__k">Front runner</p><p class="tile__v">${lead ? esc(lead.name) : "TBC"}</p><p class="tile__s">${lead ? `${lead.pts} ${lead.pts === 1 ? "pt" : "pts"}${tie ? ", tied with " + esc(R.leaderboard[1].name) : ""}` : "no votes yet"}</p></div>
-    <div class="tile"><p class="tile__k">Best month</p><p class="tile__v">${R.topMonths.length ? esc(R.topMonths.slice(0,2).map(m => m.label).join(" / ")) : "TBC"}</p><p class="tile__s">${R.maxMonth ? `${R.maxMonth} of ${R.n} free` : "no votes yet"}</p></div>
+    <div class="tile"><p class="tile__k">Best month</p><p class="tile__v">${R.topMonths.length ? esc(shortList(R.topMonths.slice(0,2).map(m => m.key))) : "TBC"}</p><p class="tile__s">${R.maxMonth ? `${R.maxMonth} of ${R.n} free` : "no votes yet"}</p></div>
     <div class="tile"><p class="tile__k">Everyone can do</p><p class="tile__v">${R.minDays ? R.minDays + "<small> days</small>" : "TBC"}</p><p class="tile__s">${R.minDays ? `${esc(firstName(R.days[0].name))} sets the ceiling` : "no votes yet"}</p></div>
     <div class="tile"><p class="tile__k">Budget</p><p class="tile__v">${R.topBudget && R.topBudget.count ? esc(R.topBudget.label) : "TBC"}</p><p class="tile__s">${R.topBudget && R.topBudget.count ? `${R.topBudget.count} said this` : "no votes yet"}</p></div>`;
 
@@ -1040,16 +1067,16 @@ function renderResults(list){
     ${R.missing.length ? `<p class="who__label">Still waiting on (${R.missing.length})</p><div class="avatars">${R.missing.map(n => `<span class="av av--todo"><i>?</i>${esc(n)}</span>`).join("")}</div>` : (R.voted.length ? `<p class="who__label">Everyone's in. Unreal.</p>` : "")}`;
 
   // months heat
-  $("#heat").innerHTML = R.months.map(m => {
+  $("#heat").innerHTML = YEARS.map(y => `<div class="heat__year"><p class="heat__label">${y}</p>${R.months.filter(m => m.y === y).map(m => {
     const t = R.maxMonth ? m.count / R.maxMonth : 0;
     const hot = R.maxMonth && m.count === R.maxMonth;
-    return `<div class="cell ${hot ? "cell--top is-hot" : (t >= .6 ? "is-hot" : "")}" style="--t:${t.toFixed(2)}" tabindex="0" aria-label="${MONTHS_LONG[m.m-1]}: ${m.count} free">
+    return `<div class="cell ${hot ? "cell--top is-hot" : (t >= .6 ? "is-hot" : "")}" style="--t:${t.toFixed(2)}" tabindex="0" aria-label="${m.long}: ${m.count} free">
       <b>${m.label}</b><small>${m.count ? m.count + " free" : "nobody"}</small>
       ${m.names.length ? `<span class="tip">${esc(listify(m.names.map(firstName)))}</span>` : ""}
     </div>`;
-  }).join("");
+  }).join("")}</div>`).join("");
   $("#heatNote").innerHTML = !R.n ? "" : (R.window2 && R.window2.both > 0
-    ? `Best two month window: <b>${esc(R.window2.a.label)} into ${esc(R.window2.b.label)}</b>, ${R.window2.both} of ${R.n} can do both. ${R.topMonths.length === 1 ? `Single best month is <b>${esc(MONTHS_LONG[R.topMonths[0].m-1])}</b>.` : ""}`
+    ? `Best two month window: <b>${esc(R.window2.a.short)} into ${esc(R.window2.b.short)}</b>, ${R.window2.both} of ${R.n} can do both. ${R.topMonths.length === 1 ? `Single best month is <b>${esc(R.topMonths[0].long)}</b>.` : ""}`
     : `No month works for everyone yet. Keep voting.`);
 
   // days
@@ -1077,7 +1104,7 @@ function renderResults(list){
   $("#table").innerHTML = `<thead><tr><th>Name</th><th>Top 3</th><th>Days</th><th>Months</th><th>Budget</th><th>Vibe</th><th>Locked in</th><th>Notes</th><th>Updated</th></tr></thead><tbody>${
     rows.map(r => {
       const d = toDate(r.updatedAt);
-      return `<tr><td>${esc(r.name)}</td><td>${(r.destinations || []).map((x,i) => `${i+1}. ${esc(x)}`).join("<br>")}</td><td>${esc(r.maxDays)}</td><td>${(r.months || []).map(m => MONTHS[m-1]).join(", ")}</td><td class="${r.budget ? "" : "muted"}">${esc(r.budget || "not said")}</td><td class="${(r.vibes||[]).length ? "" : "muted"}">${esc((r.vibes || []).join(", ") || "not said")}</td><td class="${r.blackout ? "" : "muted"}">${esc(r.blackout || "nothing")}</td><td class="${r.notes ? "" : "muted"}">${esc(r.notes || "")}</td><td class="muted">${d ? d.toLocaleDateString(undefined, { day:"numeric", month:"short" }) : ""}</td></tr>`;
+      return `<tr><td>${esc(r.name)}</td><td>${(r.destinations || []).map((x,i) => `${i+1}. ${esc(x)}`).join("<br>")}</td><td>${esc(r.maxDays)}</td><td>${(r.months || []).map(normMonth).map(k => k && monthInfo(k) ? monthInfo(k).short : "").filter(Boolean).join(", ")}</td><td class="${r.budget ? "" : "muted"}">${esc(r.budget || "not said")}</td><td class="${(r.vibes||[]).length ? "" : "muted"}">${esc((r.vibes || []).join(", ") || "not said")}</td><td class="${r.blackout ? "" : "muted"}">${esc(r.blackout || "nothing")}</td><td class="${r.notes ? "" : "muted"}">${esc(r.notes || "")}</td><td class="muted">${d ? d.toLocaleDateString(undefined, { day:"numeric", month:"short" }) : ""}</td></tr>`;
     }).join("") || `<tr><td colspan="9" class="muted">Nothing yet.</td></tr>`}</tbody>`;
 
   $("#updated").textContent = R.latest ? `Last vote ${R.latest.toLocaleString(undefined, { day:"numeric", month:"short", hour:"numeric", minute:"2-digit" })}` : "";
